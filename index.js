@@ -2,6 +2,7 @@ import express, { json } from "express";
 import clientPromise from "./mongodb.js";
 import bodyParser from "body-parser";
 import openai from "./openai.js";
+import cors from "cors";
 import { createHash } from "./utils.js";
 import { SURVEY_CREATION_SYSTEM_PROMPT } from "./prompt.js";
 const app = express();
@@ -12,7 +13,17 @@ const OPENAI_REQUEST_LIMIT = 10;
 app.use(json());
 app.use(bodyParser.json());
 
-app.post("/", async (req, res) => {
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (origin && origin.includes("wizardsurvey") !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+};
+
+app.post("/", cors(corsOptions), async (req, res) => {
   const forwardedFor = req.headers["x-forwarded-for"];
   const ip = forwardedFor
     ? forwardedFor.split(",")[0].trim()
