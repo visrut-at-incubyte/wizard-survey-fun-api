@@ -13,17 +13,7 @@ const OPENAI_REQUEST_LIMIT = 10;
 app.use(json());
 app.use(bodyParser.json());
 
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (origin && origin.includes("wizardsurvey") !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-};
-
-app.post("/", cors(corsOptions), async (req, res) => {
+app.post("/", cors(), async (req, res) => {
   const forwardedFor = req.headers["x-forwarded-for"];
   const ip = forwardedFor
     ? forwardedFor.split(",")[0].trim()
