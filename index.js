@@ -12,8 +12,9 @@ const OPENAI_REQUEST_LIMIT = 10;
 
 app.use(json());
 app.use(bodyParser.json());
+app.use(cors());
 
-app.post("/", cors(), async (req, res) => {
+app.post("/", async (req, res) => {
   const forwardedFor = req.headers["x-forwarded-for"];
   const ip = forwardedFor
     ? forwardedFor.split(",")[0].trim()
